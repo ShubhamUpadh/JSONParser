@@ -1,2 +1,2 @@
 # Ignore the tests folder
-/tests
+tests/
