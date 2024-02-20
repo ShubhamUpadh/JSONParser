@@ -7,6 +7,14 @@ errorCodes = {0:"Valid JSON File",
 fileName = sys.argv[1]
 data = None
 isJson = True
+def checkCommaValid(string):
+    for char in range(len(string)):
+        if string[char] == "{" and string[char+1] != '"':
+            return [False,4]
+        if string[char] == ":" and string[char-1:char+2] != '":"':
+            #print('This condition ":"')
+            return [False,5]
+    return [True,0]
 try:
     with open(r'tests\\tests\\step2\\'+fileName,"r") as file:
         data = file.read()
@@ -17,6 +25,8 @@ try:
     if data[-2] == ",":
         print(errorCodes[3] + " |     Error Code -" +"1")
         isJson = not isJson
+    if checkCommaValid(data)[0] is False:
+        print(checkCommaValid(data))
     if isJson:
         print("0")
 except FileNotFoundError:
