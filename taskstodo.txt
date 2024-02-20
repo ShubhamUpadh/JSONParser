@@ -1,0 +1,4 @@
+1. Sabhi function ko ek class me daalo
+2. Better way hai ki sabko split kardo : aur , pe aur "{" aur "}" ko hata daalo
+3. Key ki alag se array bana lo, aur values ki alag se
+4. Ensure karo ki saari keys ek string hai "" dono ends par
