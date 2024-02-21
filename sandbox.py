@@ -11,10 +11,12 @@ class JsonParser:
               3:"Trailing comma after last key-value pair",
               4:"Trailing braces are absent",
               5:"Key is empty",
-              6:"Key is not a string"}
+              6:"Key is not a string",
+              7:"Value is not in proper format"}
         self.successCodes = {
             101:"Basic checks passed",
-            102:"Keys are in correct format"
+            102:"Keys are in correct format",
+            103:"Values are in correct format"
         }
         
         self.fileName = fileName
@@ -36,7 +38,7 @@ class JsonParser:
         splitString = re.split(r"[:,]",string[1:-1])  #Remove curly braces and split the string using : and , 
         keyString = [splitString[x] for x in range(len(splitString)) if x%2 == 0]
         valueString = [splitString[x] for x in range(len(splitString)) if x%2 != 0]
-        return [True,[keyString,valueString],self.successCodes[101]]
+        return [True,[keyString,valueString],101]
     
     def keyCheck(self,arr):
         for key in arr:
@@ -46,6 +48,21 @@ class JsonParser:
                 return [False,6]
         return [True,102]
     
+    def valueCheck(self,arr):
+        isGood = False
+        for value in arr:
+            if value in ('""',"''"):    #empty values allowed
+                isGood = True
+            elif value in ('null'):     #'null' is equal to "null"
+                isGood = True
+            elif value in ('true','false','True','False'):     #boolean values allowed
+                isGood = True
+            if not isGood:
+                return [False,7]
+        if isGood:
+            return [True,103]
+        
+        
     def parseJSON(self):
         try:
             with open(r'tests\\tests\\step1\\'+self.fileName,"r") as file:
@@ -64,7 +81,8 @@ class JsonParser:
         except FileNotFoundError:
             print(self.errorCodes[2] + " |     Error Code -" + "2")
         if self.isJson:
-            print(self.data)
+            pass
+            #print(self.data)
 
 newParser = JsonParser(sys.argv[1])
 newParser.parseJSON()
