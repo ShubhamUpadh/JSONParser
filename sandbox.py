@@ -72,10 +72,10 @@ class JsonParser:
     
     def keyCheck(self,arr):
         for key in arr:
-            print(key)
+            #print(key)
             if key == '':
                 return [False,5]
-            if key[0] != "'" or key[-1] != "'":
+            if not isinstance(key[0],str):
                 return [False,6]
         return [True,102]
     
@@ -111,7 +111,6 @@ class JsonParser:
                 print(self.successCodes[self.basicCheck[2]])
             #Now check for JSON keys
             print(self.keyArr,self.valueArr)
-            '''
             self.keyCheckRes = self.keyCheck(self.keyArr)
             if self.keyCheckRes[0] is False:
                 print("Failing key checks")
@@ -122,7 +121,6 @@ class JsonParser:
             #valCheck = self.valueCheck(self.data)
             
             #now we will check if keys are in proper format
-            '''
                 
         except FileNotFoundError:
             print(self.errorCodes[2] + " |     Error Code -" + "2")
