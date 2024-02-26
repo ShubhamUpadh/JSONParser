@@ -37,21 +37,19 @@ class JsonParser:
         string = string[counter:]
         
         counter = len(string) - 1
-        for i in range(len(string)-1,-1,-1):
+        for i in range(len(string)-1,-1,-1):    #remove spaces at the end
             if string[i] == " ":
                 counter -= 1
             else:
                 break
-        string = string[:counter]
-        
+        string = string[:counter+1]
+        print(string)
         return string
     
     def dataSplit(self,string): #do basic checks here for upto steps 
-        print(string)
         if len(string) == 0:    #if the JSON file is empty
             return [False,1]
         string = self.removeExtraSpaces(string)
-        print(string)
         if len(string) == 2 and string != "{}": #self explainatory
             return [False,4]
         if len(string) > 2 and (string[0] != "{" or string[-1] != "}"): #ensure that curly baces are prest at either ends
@@ -79,7 +77,7 @@ class JsonParser:
                 isGood = True
             elif value in ('null'):     #'null' is equal to "null"
                 isGood = True
-            elif value in ('true','false','True','False'):     #boolean values allowed
+            elif value in ('true','false'):     #boolean values allowed and True,False not allowed
                 isGood = True
             #elif value
             if not isGood:
@@ -90,8 +88,9 @@ class JsonParser:
         
     def parseJSON(self):
         try:
-            with open(r'tests\\tests\\step2\\'+self.fileName,"r") as file:
+            with open(r'tests\\tests\\step3\\'+self.fileName,"r") as file:
                 self.data = file.read()
+                #print(self.data)
             self.basicCheck = self.dataSplit(self.data)
             if self.basicCheck[0] is False:
                 print("Failing Basic Checks")
