@@ -26,6 +26,8 @@ class JsonParser:
         self.basicCheck = []
         self.keyArr = []
         self.valueArr = []
+        self.keyCheckRes = []
+        self.valCheckRes = []
     
     def removeExtraSpaces(self,string):
         counter = 0
@@ -43,7 +45,6 @@ class JsonParser:
             else:
                 break
         string = string[:counter+1]
-        print(string)
         return string
     
     def dataSplit(self,string): #do basic checks here for upto steps 
@@ -53,20 +54,21 @@ class JsonParser:
         if len(string) == 2 and string != "{}": #self explainatory
             return [False,4]
         if len(string) > 2 and (string[0] != "{" or string[-1] != "}"): #ensure that curly baces are prest at either ends
-            print("Here")
             return [False,4]
         if len(string) > 2 and string[-2] == ",": #there is comma after last key value pair -> NOT VALID
             return [False,3]
         splitString = re.split(r"[:,]",string[1:-1])  #Remove curly braces and split the string using : and , 
-        keyString = [splitString[x] for x in range(len(splitString)) if x%2 == 0]
+        print(splitString)
+        keyString = [splitString[x][4:-1] for x in range(len(splitString)) if x%2 == 0]
         valueString = [splitString[x] for x in range(len(splitString)) if x%2 != 0]
         return [True,[keyString,valueString],101]
     
     def keyCheck(self,arr):
         for key in arr:
-            if key == "":
+            print(key)
+            if key == '':
                 return [False,5]
-            if key[0] != '"' or key[-1] != '"':
+            if key[0] != "'" or key[-1] != "'":
                 return [False,6]
         return [True,102]
     
@@ -90,18 +92,30 @@ class JsonParser:
         try:
             with open(r'tests\\tests\\step3\\'+self.fileName,"r") as file:
                 self.data = file.read()
-                #print(self.data)
             self.basicCheck = self.dataSplit(self.data)
+            #Do all the basic checks here
             if self.basicCheck[0] is False:
                 print("Failing Basic Checks")
                 print("Error Code " + str(self.basicCheck[1]) + " " + self.errorCodes[self.basicCheck[1]])
                 sys.exit()
             elif self.basicCheck[0] is True:    #basic checks satisfied
-                self.keyArr = self.basicCheck[1][0]
-                self.valueArr = self.basicCheck[1][1]
+                self.keyArr = self.basicCheck[1][0]     #we will get the JSON keys
+                self.valueArr = self.basicCheck[1][1]   #we will get the JSON values
                 print(self.successCodes[self.basicCheck[2]])
-            #now we will check if keys are in proper format
+            #Now check for JSON keys
+            print(self.keyArr,self.valueArr)
+            '''
+            self.keyCheckRes = self.keyCheck(self.keyArr)
+            if self.keyCheckRes[0] is False:
+                print("Failing key checks")
+                print("Error Code " + str(self.keyCheckRes[1]) + " " + self.errorCodes[self.keyCheckRes[1]])
+            elif self.keyCheckRes[0] is True:
+                print(self.successCodes[self.keyCheckRes[1]])
+                
+            #valCheck = self.valueCheck(self.data)
             
+            #now we will check if keys are in proper format
+            '''
                 
         except FileNotFoundError:
             print(self.errorCodes[2] + " |     Error Code -" + "2")
