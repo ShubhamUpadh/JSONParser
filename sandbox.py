@@ -89,15 +89,20 @@ class JsonParser:
     def valueCheck(self,arr):
         isGood = False
         for value in arr:
+            #print(value)
             if value in ('""',"''"):    #empty values allowed
                 isGood = True
             elif value in ('null'):     #'null' is equal to "null"
                 isGood = True
             elif value in ('true','false'):     #boolean values allowed and True,False not allowed
                 isGood = True
-            elif value.isnumeric():
+            elif value.isnumeric():     #if key is a number 
                 isGood = True
-            elif isinstance(value,str):
+            elif value[0] == '"' and value[-1] =='"':
+                isGood = True
+            elif value[0] =='{' and value[-1] == '}':
+                isGood = True
+            elif value[0] =='[' and value[-1] == ']':
                 isGood = True
             if not isGood:
                 return [False,8]
@@ -131,7 +136,7 @@ class JsonParser:
                 print(self.successCodes[self.keyCheckRes[1]])
                 
             #Now check for JSON values                
-            self.valCheckRes = self.valueCheck(self.data)
+            self.valCheckRes = self.valueCheck(self.valueArr)
             if self.valCheckRes[0] is False:
                 print("Failing val checks")
                 print("Error Code " + str(self.valCheckRes[1]) + " " + self.errorCodes[self.valCheckRes[1]])
