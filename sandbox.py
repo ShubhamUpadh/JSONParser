@@ -75,7 +75,10 @@ class JsonParser:
         keySet = set()
         for key in arr:
             if key in keySet:
+                print(key)
                 return[False,7]
+            else:
+                keySet.add(key)
             #print(key)
             if key == '':
                 return [False,5]
@@ -94,8 +97,10 @@ class JsonParser:
                 isGood = True
             elif value.isnumeric():
                 isGood = True
+            elif isinstance(value,str):
+                isGood = True
             if not isGood:
-                return [False,7]
+                return [False,8]
         if isGood:
             return [True,103]
         
@@ -117,7 +122,7 @@ class JsonParser:
                 print(self.successCodes[self.basicCheck[2]])
                 
             #Now check for JSON keys
-            #print(self.keyArr,self.valueArr)
+            print(self.keyArr,self.valueArr)
             self.keyCheckRes = self.keyCheck(self.keyArr)
             if self.keyCheckRes[0] is False:
                 print("Failing key checks")
@@ -125,7 +130,13 @@ class JsonParser:
             elif self.keyCheckRes[0] is True:
                 print(self.successCodes[self.keyCheckRes[1]])
                 
-            #valCheck = self.valueCheck(self.data)
+            #Now check for JSON values                
+            self.valCheckRes = self.valueCheck(self.data)
+            if self.valCheckRes[0] is False:
+                print("Failing val checks")
+                print("Error Code " + str(self.valCheckRes[1]) + " " + self.errorCodes[self.valCheckRes[1]])
+            elif self.valCheckRes[0] is True:
+                print(self.successCodes[self.valCheckRes[1]])
             
             #now we will check if keys are in proper format
                 
