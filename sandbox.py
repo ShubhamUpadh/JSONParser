@@ -12,7 +12,8 @@ class JsonParser:
               4:"Preceeding and Trailing braces are absent",
               5:"Key is empty",
               6:"Key is not a string",
-              7:"Value is not in proper format"}
+              7:"Duplicate Key",
+              8:"Value is not in proper format"}
         
         self.successCodes = {
             101:"Basic checks passed",
@@ -71,7 +72,10 @@ class JsonParser:
         return [True,[keyString,valueString],101]
     
     def keyCheck(self,arr):
+        keySet = set()
         for key in arr:
+            if key in keySet:
+                return[False,7]
             #print(key)
             if key == '':
                 return [False,5]
@@ -88,7 +92,8 @@ class JsonParser:
                 isGood = True
             elif value in ('true','false'):     #boolean values allowed and True,False not allowed
                 isGood = True
-            #elif value
+            elif value.isnumeric():
+                isGood = True
             if not isGood:
                 return [False,7]
         if isGood:
@@ -99,6 +104,7 @@ class JsonParser:
         try:
             with open(r'tests\\tests\\step3\\'+self.fileName,"r") as file:
                 self.data = file.read()
+                
             self.basicCheck = self.dataSplit(self.data)
             #Do all the basic checks here
             if self.basicCheck[0] is False:
@@ -109,8 +115,9 @@ class JsonParser:
                 self.keyArr = self.basicCheck[1][0]     #we will get the JSON keys
                 self.valueArr = self.basicCheck[1][1]   #we will get the JSON values
                 print(self.successCodes[self.basicCheck[2]])
+                
             #Now check for JSON keys
-            print(self.keyArr,self.valueArr)
+            #print(self.keyArr,self.valueArr)
             self.keyCheckRes = self.keyCheck(self.keyArr)
             if self.keyCheckRes[0] is False:
                 print("Failing key checks")
