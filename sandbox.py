@@ -59,8 +59,15 @@ class JsonParser:
             return [False,3]
         splitString = re.split(r"[:,]",string[1:-1])  #Remove curly braces and split the string using : and , 
         print(splitString)
+        
         keyString = [splitString[x][4:-1] for x in range(len(splitString)) if x%2 == 0]
+        for val in range(len(keyString)):
+            keyString[val] = self.removeExtraSpaces(keyString[val])
+            
         valueString = [splitString[x] for x in range(len(splitString)) if x%2 != 0]
+        valueString[-1] = valueString[-1][:-1]
+        for val in range(len(keyString)):
+            valueString[val] = self.removeExtraSpaces(valueString[val])
         return [True,[keyString,valueString],101]
     
     def keyCheck(self,arr):
